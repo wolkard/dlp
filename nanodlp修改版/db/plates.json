@@ -1,0 +1,27 @@
+[
+	{
+		"PlateID": 1,
+		"ProfileID": 1,
+		"CreatedDate": "0001-01-01T00:00:00Z",
+		"StopLayers": "",
+		"Path": "plate",
+		"LowQualityLayerNumber": 0,
+		"AutoCenter": 0,
+		"Updated": 1571380859,
+		"PrintTime": 0,
+		"PrintEst": 0,
+		"ImageRotate": 0,
+		"MaskEffect": 0,
+		"Corrupted": false,
+		"TotalSolidArea": 0,
+		"BlackoutData": "",
+		"LayersCount": 1250,
+		"Processed": false,
+		"Xmin": -39.41858,
+		"Xmax": 39.41858,
+		"Ymin": -32.54243,
+		"Ymax": 32.54243,
+		"Zmin": 4,
+		"Zmax": 41.5
+	}
+]

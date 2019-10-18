@@ -1,0 +1,15 @@
+{
+	"PlateID": 8,
+	"SlicingPlateID": 1,
+	"Path": "漏斗",
+	"LayerID": 105,
+	"ResumeID": 106,
+	"LayerSinceStart": 47,
+	"LayersCount": 1000,
+	"PlateHeight": 50,
+	"CurrentHeight": 0,
+	"LayerTime": 8981860640,
+	"Camera": 0,
+	"LampHours": 0,
+	"Covered": false
+}

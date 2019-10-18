@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link href='/static/css/step.css' rel="stylesheet">
+	<link href="/static/css/boot3mode.css" rel="stylesheet"/>
+	<!--<link href='/static/css/jquery-ui.css' rel="stylesheet">-->
+	<!--<link href="/static/css/boot3mode.css" rel="stylesheet"/>-->
+	<!--<link href="/static/js/loading/src/loading.css" rel="stylesheet">-->
+	<title>3D打印</title>
+</head>
+<body onselectstart="return false">
+	<div class='steps'>
+		<div class = "step" id="step1"><span class="span_step">STEP</span><br/><span class="span_num">1</span></div>
+		<div class = "step" id="step2"><span class="span_step">STEP</span><br/><span class="span_num">2</span></div>
+		<div class = "step_3" id="step3"><span class="span_step">STEP</span><br/><span class="span_num">3</span></div>
+	</div>
+	<div class="menu" id="menu_step1">
+		<div class="select_material" id="setup_z" >
+			<div id="setup_title" class="application_title">z轴控制</div>
+			<a href="/z-axis/move/up/micron/150000" type="button" class="setup_a">
+				<div class="density_button step2_button gray " >TOP</div>
+			</a>
+			<a href="/z-axis/move/up/micron/100000" type="button" class="setup_a">
+				<div class="density_button step2_button gray " >100mm</div>
+			</a>
+			<a href="/z-axis/move/up/micron/50000" type="button" class="setup_a">
+				<div class="density_button step2_button gray " >50mm</div>
+			</a>
+			<a href="/z-axis/move/up/micron/10000" type="button" class="setup_a">
+				<div class="density_button step2_button gray " >10mm</div>
+			</a>
+			<!--<a href="" type="button" class="setup_a">-->
+				<div class="density_button step2_button gray " id="home" >HOME</div>
+			<!--</a>-->
+		</div>
+	</div>
+	<div id="menu_bottom">
+		<img src="/static/img/setup_2.png" id="setup_3d" />
+	</div>
+	<div id="view_setup">
+		<div class="calibration_1">
+			<img src="/static/general/calibration.png" style="width: 240px;" >
+			<div class="cal_1">
+				<div class="cal_title">动态校准</div>
+				<a href="/projector/generate/calibration"><div class="gray cal_button">投影校准</div></a>
+				<a href="/projector/blank" ><div class="gray cal_button">关闭投影</div></a>
+			</div>
+		</div>
+		<div class="calibration_2">
+			
+			<img src="/static/general/boundaries.png" style="width: 240px;" >
+			<div class="cal_2">
+				<div class="cal_title">边界校准</div>
+				<a href="/projector/generate/boundaries"><div class="gray cal_button">投影校准</div></a>
+				<a href="/projector/blank" ><div class="gray cal_button">关闭投影 </div></a>
+			</div>
+		</div>
+	</div>
+	<!--确保料槽无异物-->
+	<div class="modal fade" id="home_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">×
+					</button>
+					<!--<h4 class="modal-title" id="myModalLabel">-->
+						<!--模态框（Modal）标题-->
+					<!--</h4>-->
+				</div>
+				<div class="modal-body">
+					请确保料槽内无异物
+				</div>
+				<div class="modal-footer">
+					<button type="button" onclick="window.location.href='/z-axis/bottom';" class="btn btn-warning">
+						确定
+					</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	<script src='/static/boot3/js/jquery.min.js'></script>
+	<script src='/static/boot3/js/bootstrap.min.js'></script>
+
+	<script>
+		$('#step1').click(function(a){
+			window.location.href='/static/?width=105.6&height=70.5&dst=/plate/add-support&exit=/plates';
+		});
+		$('#step2').click(function(a){
+			window.location.href='/static/?width=105.6&height=70.5&dst=/plate/add-support&exit=/plates';
+		});
+		$('#step3').click(function(a){
+			window.location.href='/plates';
+		});
+		$('#home').click(function(a){
+			$('#home_model').modal();
+		});
+		$('#setup_3d').click(function(){
+			var from = 1;
+			if(typeof(localStorage.setup_from)!="undefined"){
+				if(JSON.parse(localStorage.setup_from) != null){
+					from = JSON.parse(localStorage.setup_from)
+				}
+			}
+			if (from==1) {
+				window.location.href = "/static/?width=105.6&height=70.5&dst=/plate/add-support&exit=/plates";
+			}
+			else if(from==2){
+				window.location.href = "/plates";
+			}
+			else if(from==3){
+				window.location.href = "/";
+			}
+		});
+	</script>
+</body>
+</html>

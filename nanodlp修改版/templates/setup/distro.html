@@ -1,0 +1,23 @@
+{% extends "../base.html" %}
+{% block content %}
+<form method="post" class="edit-page">
+	<div class="row">
+		<div class="col-md-2">
+		</div>
+		<div class="col-md-8">
+			<div class="alert alert-success">
+				<translate>Please choose a distribution. Mask, default setting files and etc will be deployed.</translate>
+				<br>
+				<translate>If you want to overwrite settings too, after restart go to `Setup` page / `Tools` tab and press `Restore Settings` button.</translate>
+				<br>
+			</div>
+			<a href="/printer/distro/generic" class="btn btn-danger ajax" data-ajax="/" translate>Change to "nanoDLP generic" Version</a><br>
+			<a href="/printer/distro/phrozen" class="btn btn-danger ajax" data-ajax="/" translate>Change to "Phrozen" Version</a><br>
+			<a href="/printer/distro/muve3d" class="btn btn-danger ajax" data-ajax="/" translate>Change to "mUVe3D" Version</a><br>
+			<a href="/printer/distro/microlay" class="btn btn-danger ajax" data-ajax="/" translate>Change to "Microlay" Version</a><br>
+		</div>
+		<div class="col-md-2">
+		</div>
+	</div>
+</form>
+{% endblock %}

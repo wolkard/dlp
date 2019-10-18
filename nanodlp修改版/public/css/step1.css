@@ -1,0 +1,252 @@
+*, *:before, *:after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+	font: 12px/1 'Roboto', sans-serif;
+	color: #555;
+	background-color: #fff;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.steps{
+	width: 6%;
+	height: 100%;
+	float: left;
+}
+.step{
+	height: 32%;
+}
+.step3{
+	height: 36%;
+}
+.step ,.step3{
+	/*border-top: 1px solid #ddd;*/
+	border-bottom: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	background-color: #f5f5f5;
+	position: relative;
+	padding-top: 120%;
+	font-size: 13px;
+	font-weight: bold;
+	text-align: center;
+	color: #aaa;
+	cursor: pointer;
+}
+
+.step:hover,.step3:hover{
+	background: #eee;
+}
+.active {
+	color: #777;
+	background-color: #fafafa;
+}
+.step span:first-child ,.step3 span:first-child{
+	display: inline-block;
+	width: 22px;
+	height: 22px;
+	padding: 2px;
+	margin-right: 5px;
+	border: 2px solid #aaa;
+	border-radius: 50%;
+	background-color: #fff;
+}
+
+.active span:first-child {
+	color: #fff;
+	border-color: #777;
+	background-color: #777;
+}
+
+.step:before,
+.step:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 100%;
+	z-index: 1;
+	display: block;
+	width: 0;
+	height: 0;
+	border-right: 45px solid transparent;
+	border-top: 50px solid transparent;
+	border-left: 45px solid transparent;
+}
+.step:before {
+	margin-top: 1px;
+	border-top-color: #d5d5d5;
+}
+.step:after {
+	border-top-color: #f5f5f5;
+}
+.step:hover:after {
+	border-top-color: #eee;
+}
+.active:after {
+	border-top-color: #fafafa;
+}
+#top-menu{
+	height: 6%;
+	padding-left: 20px;
+    padding-right: 20px;
+    background: #fbfbfb;
+    border: 1px solid #e2e2e2;
+    /*margin-bottom: 1px;*/
+}
+#conter{
+	width: 100%;
+	height: 94%;
+}
+.menu{
+	background-color: #fafafa;
+	float: left;
+	width: 18%;
+	height: 100%;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+}
+#scene{
+	position: relative;
+	width: 75%;
+	height: 150px;
+	top: 30px;
+	left: 12%;
+	border: 1px solid #ddd;
+	border-top: 0px;
+}
+/*#file_open{
+	
+	
+}*/
+.a-upload {
+    padding: 4px 10px;
+    line-height: 20px;
+    position: relative;
+	margin-top: 40px;
+    cursor: pointer;
+    color: #888;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1
+}
+
+.a-upload  input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    cursor: pointer
+}
+
+.a-upload:hover {
+    color: #444;
+    background: #eee;
+    border-color: #ccc;
+    text-decoration: none
+}
+#support{
+	position: relative;
+	width: 75%;
+	height: 150px;
+	top: 30px;
+	left: 12%;
+	border: 1px solid #ddd;
+	border-top: 0px;
+}
+#support_button_1{
+	width: 70px;
+    margin-top: 40px;
+}
+#support_button_2{
+    margin-top: 50px;
+	display: none;
+}
+#support_button_3{
+    margin-top: 20px;
+	display: none;
+}
+
+
+#view_3d{
+	float: left;
+	width: 76%;
+	height: 99.9%;
+}
+.a-profile{
+	float: right;
+	margin-right: 4px;
+	padding: 2px 4px;
+    line-height: 20px;
+    position: relative;
+    cursor: pointer;
+    color: #888;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1
+}
+.a-profile:hover{
+	color: #444;
+    background: #eee;
+    border-color: #ccc;
+    text-decoration: none
+}
+#support_button_2 input{
+	/*float: left;*/
+	margin: 5px;
+	line-height: 20px;
+    position: relative;
+    cursor: pointer;
+    color: #888;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1
+}
+#support_button_1 input{
+	margin-top: 5px;
+}
+#support_button_3 input{
+	line-height: 20px;
+    position: relative;
+    cursor: pointer;
+    color: #888;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1
+}
+.siderInput{
+	border:0;
+	color:#f6931f;
+	font-weight:bold;
+	max-width:20%;
+
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+	-webkit-appearance: none !important;
+	margin: 0;
+}

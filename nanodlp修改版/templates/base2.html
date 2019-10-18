@@ -1,0 +1,98 @@
+{% macro buttonsView(buttons,page) %} {% if buttons %}
+<div class="custom-buttons">
+	{% for button in buttons %} {% if button.Position==page %}
+	<a href="/button/press/{{button.ID}}" class="{{button.Color}} {{button.Condition}}" {% if button.ConfirmText!="" %} onclick="return confirm('{{button.ConfirmText}}');"
+	  {% endif %}>{{button.Name}}</a>
+	{% endif %} {% endfor %}
+</div>
+{% endif %} {% endmacro %}{% macro helpModal(helpFiles,title) %} {% if helpFiles %}
+<a href="#" class="help" data-files="{{helpFiles}}" translate>?</a>
+{% endif %} {% endmacro %}{% macro formulaModal(title) %}
+<a href="#" class="help" data-files="formula" data-run="true" translate>F</a>
+{% endmacro %}{% macro importance(ramps,direct) %}
+<div class="color-code">
+	<a href="#" class="help color_{{ramps}}" data-files="importance" data-run="true" translate>R</a>
+	<a href="#" class="help color_{{direct}}" data-files="importance" data-run="true" translate>D</a>
+</div>
+{% endmacro %}{% macro regenerateRequired() %}
+<a href="#" class="help regen" data-files="regenerate-required">⟲</a>
+{% endmacro %}
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+	<meta charset="utf-8">
+	<!--<link rel="icon" href="favicon.ico">-->
+	<link href='/static/css/step.css' rel="stylesheet">
+	<title>3D </title>
+
+	<!-- Bootstrap core CSS -->
+	<!--<link href='/static/boot3/css/bootstrap.{{theme}}.min.css' rel="stylesheet">-->
+
+	<!-- Custom styles for this template -->
+	<link href='/static/css/main.css' rel="stylesheet">
+	<link href='/static/css/step.css' rel="stylesheet">
+	<link href="/static/css/boot3mode.css" rel="stylesheet"/>
+	{% block head %} {% endblock %}
+</head>
+<body data-lang="ch" style="margin-top: -70px;" onselectstart="return false">
+
+	<div class='steps'>
+		<div class = "step " id="step1"><span class="span_step">STEP</span><br/><span class="span_num">1</span></div>
+		<div class = "step" id="step2"><span class="span_step">STEP</span><br/><span class="span_num">2</span></div>
+		<div class = "step3" id="step3"><span class="span_step">STEP</span><br/><span class="span_num">3</span></div>
+	</div>
+	<!--返回第一页模态框-->
+	<!--<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">-->
+		<!--开始演示模态框-->
+	<!--</button>-->
+	<div class="modal fade" id="return_step1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">×
+					</button>
+					<!--<h4 class="modal-title" id="myModalLabel">-->
+						<!--模态框（Modal）标题-->
+					<!--</h4>-->
+				</div>
+				<div class="modal-body">
+					确定返回第一步重新开始吗？
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info"	data-dismiss="modal">
+						关闭
+					</button>
+					<button type="button" onclick="window.location.reload();" class="btn btn-warning">
+						确定
+					</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+	<div class="menu" id="menu_step3">
+		{% block menu %} {% endblock %}
+	</div>
+	{% block content %} {% endblock %}
+	<!-- /container -->
+
+
+	<script src='/static/boot3/js/jquery.min.js'></script>
+	<script src='/static/boot3/js/bootstrap.min.js'></script>
+	<script src='/static/js/jquery.imgareaselect.dev.js'></script>
+	<script src='/static/js/favico-0.3.10.min.js'></script>
+	<script src='/static/js/jquery.sparkline.min.js'></script>
+	<script src='/static/js/main.js'></script>
+	<script src='/static/js/formula.js'></script>
+	<script src='/static/js/preview.js'></script>
+	<script src='/static/js/three.js'></script>
+	<script src="/static/js/jquery.cookie.js"></script>
+	<!--<script src='/static/js/po.js'></script>-->
+	
+</body>
+<script>
+	{% block script %} {% endblock %}
+</script>
+<script src='/static/js/slicer.js'></script>
+</html>

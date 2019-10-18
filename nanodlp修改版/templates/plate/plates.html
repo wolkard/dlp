@@ -1,0 +1,259 @@
+{% extends "../base2.html" %}
+{% block menu%}
+<div id="button_1">
+	<img class="img" style="height: 49px;" src="/static/img/2_03.png" />
+	<div id="star" class="step3_button">开始打印</div>
+</div>
+{% endblock %}
+{% block content %}
+	<div class="view_block left_up"></div>
+	<div class="view_block right_up"></div>
+	<div class="view_block left_down"></div>
+	<div class="view_block right_down"></div>
+	<div class="view">
+		<div class="preview_title">预览图:</div>
+        <input type="range" max="" min="1" value="1" class="" id="preview_range" autofocus>
+        <img src="/static/plates/dynamic.png" id="preview" data-path="" width="400px" height="225px">
+        <div class="preview_button">
+        	<button id="preview_previous" class="btn btn-success">&#x3C;</button>
+        	<button id="preview_next" class="btn btn-success">&#x3E;</button>
+        	<p id="preview_p"></p>
+        </div>
+		
+		
+	
+	</div>
+	<div id="menu_bottom">
+		<img src="/static/img/setup.png" id="setup_3d" />
+	</div>
+<table class="table table-striped table-bordered model-list" id="plates" style="display: none;">
+	{% if plates %}
+		{% for row in plates %}{% if row.PlateID != 0 %}
+			<tr>
+				<td>{{row.PlateID}}</td>
+				<td>{{row.Path}}</td>
+				<td>
+					{% if !row.profileError %}
+						<a href="/profile/edit/{{row.profileID}}">{{row.ProfileName}}</a><br>
+						X:{{row.XRes}}μm Y:{{row.YRes}}μm Z:{{row.ZRes}}μm<br>
+						<translate>Cure Time</translate>:{{row.cureTime}}s<br>
+						{% if row.ProfileUpdate>row.Updated %}
+							<div class="notice" translate>Plate generated using old profile data.</div>
+						{% endif %}
+					{% else %}
+						<div class="alert alert-warning" translate>Profile not found.</div>
+					{% endif %}
+				</td>
+				<td>
+					<dl class="small">
+						<dt translate>Print Time</dt>
+						<dd>{{row.PrintTime}}</dd>
+						<dt translate>Resin Usage</dt>
+						<dd>{{row.TotalSolidArea}}ml</dd>
+						<dt translate>Resin Cost</dt>
+						<dd>{{row.Price}}</dd>
+						{% if row.StopLayers %}
+							<dt translate>Stop Layers</dt>
+							<dd>{{row.StopLayers}}</dd>
+						{% endif %}
+				</td>
+				<td>
+					{% if row.Corrupted==true %}
+					<div class="alert alert-danger" translate>This plate is corrupted.</div><br>
+					{% endif %}
+					<a class="btn btn-primary" href="/plate/edit/{{ row.PlateID }}" title="Edit Plate" translate>Edit</a>
+
+					{% if row.PlateID != status.PlateID or status.Printing == false %}
+					<a class="btn btn-danger ask" href="/plate/delete/{{ row.PlateID }}" title="Delete Plate" data-ask="delete-confirm" translate>删除</a>
+
+					{% endif %}
+
+					{% if row.Processed==true %}
+					<a class="btn btn-success" href="/plate/download/{{ row.PlateID }}" title="Download Plate" translate>下载</a>
+					{% endif %}
+
+					{% if row.Type=="stl" %}
+						<a href="/static/?src=/static/plates/{{ row.PlateID }}/plate.stl&dst=/plate/add-support&width={{width}}&height={{height}}" translate class="btn btn-success">继续编辑</a>
+					{% endif %}
+
+					<br>
+					{% if row.Processed==true %}
+					<a class="btn btn-warning ask" href="/plate/regenerate/{{ row.PlateID }}" title="Recreate Layers" data-ask="regenerate-confirm" translate>重新加载</a>
+					{% endif %}
+
+					{% if row.BlackoutData!="" %}
+						<a class="btn btn-primary" href="/plate/cover/{{ row.PlateID }}" translate>修改断点</a>
+					{% else %}
+						<a class="btn btn-primary" href="/plate/cover/{{ row.PlateID }}" translate>添加断点</a>
+					{% endif %}
+					<a class="btn btn-success" href="/plate/preview/{{ row.PlateID }}" translate>预览打印层次</a>
+					{% if row.Processed==false %}
+					{% endif %}
+				</td>
+				<td>
+					{% if row.PlateID != status.PlateID or status.Printing == false %}
+						<form action="/printer/start/{{ row.PlateID }}" method="POST">
+							<div class="input-append">
+								<input id="appendedtext" name="LayerID" class="form-control compact-input" placeholder="Layer ID" value="{% if row.PlateID == status.PlateID %}{{status.ResumeID}}{% endif %}" type="text" size="3">
+								<translate class="hide">Layer ID</translate>
+								<span class="add-on"> <span translate>of</span> {{row.LayersCount}} <span translate>Layers</span></span>
+								<button type="submit" class="btn btn-warning resume" data-confirm='Are you sure you want to resume plate {{row.Path}} from layer [LayerID]?' value="Submit" translate>恢复打印</button>
+							</div>
+						</form>
+						<a class="btn btn-success" href="/printer/start/{{ row.PlateID }}" title="Auto play" onclick="return confirm('Are you sure you want to print plate {{row.Path}}?');" translate>开始打印</a>
+					{% else %}
+						<div class="input-append">
+							<a class="btn btn-danger ask" href="/printer/stop" title="stop" data-ask="stop-confirm" translate>Stop</a>
+							<span class="add-on"><span translate>Layer</span> {{ status.ResumeID }} <span translate>of</span> {{row.LayersCount}}</span>
+						</div>
+					{% endif %}
+				</td>
+			</tr>
+		{% endif %}{% endfor %}
+	{% else %}
+		<tr>
+			<td colspan="999">
+				<div class="text-center" translate>
+					No Plates
+				</div>
+			</td>
+		</tr>
+	{% endif %}
+
+	<tr>
+		<td>-</td>
+		<td translate>Plate Generator</td>
+		<td colspan="2" translate>Create 3D shapes by repeating an image frame</td>
+		<td>
+			<a class="btn btn-info" href="/plate/layer-generator" translate>Upload Image</a>
+			<br>
+			<a class="btn btn-info" href="/plate/paint" translate>Paint</a>
+		</td>
+		<td></td>
+	</tr>
+
+	<tr>
+		<td>-</td>
+		<td><span translate>Calibration Plate</span>{{helpModal("calibration-plate")}}</td>
+		<td><span translate>Rect:</span> {{generator.BlockWidth}}*{{generator.BlockHeight}}*{{generator.Depth}}
+		<br>
+		<span translate>Pillars:</span> {{generator.PillarSize}}*{{generator.Depth}}
+		</td>
+		<td>-</td>
+		<td>
+			<a class="btn btn-primary" href="/plate/generator" title="Generate Calibration Plate" translate>Generate</a>
+			<br>
+			<a class="btn btn-success" href="/plate/preview/0" translate>Preview Layers</a>
+		</td>
+		<td>
+			{% if 0 != status.PlateID or status.Printing == false %}
+				<a class="btn btn-success ask" href="/printer/start/0" title="Auto play" data-ask="calibrate-confirm" translate>Print Calibration Plate</a>
+			{% else %}
+				<div class="input-append">
+					<a class="btn btn-danger ask" href="/printer/stop" title="stop" data-ask="stop-confirm" translate>Stop</a>
+				</div>
+			{% endif %}
+		</td>
+	</tr>
+
+</table>
+{% if freeSpace > 0 %}
+	<sub><span translate>Free Disk Space</span> {{freeSpace}}MB</sub>
+	<br>
+	<br>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+    if (r != null) return unescape(r[2]); return null; //返回参数值
+}
+function validateImage(url)
+    {    
+        var xmlHttp ;
+        if (window.ActiveXObject)
+         {
+          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+         }
+         else if (window.XMLHttpRequest)
+         {
+          xmlHttp = new XMLHttpRequest();
+         } 
+        xmlHttp.open("Get",url,false);
+        xmlHttp.send();
+        if(xmlHttp.status==404)
+        return false;
+        else
+        return true;
+    }
+function imgLoad(url, callback) {
+	var timer = setInterval(function() {
+		if (validateImage(url)) {
+			callback()
+			clearInterval(timer)
+		}
+	}, 50)
+}
+var id = document.getElementById("plates").getElementsByTagName("tr")[0].getElementsByTagName("td")[0].firstChild.nodeValue;
+var tr = document.getElementById("plates").getElementsByTagName("tr");
+var ids = new Array();
+for( var i=0; i<tr.length-2; i++){
+	ids.push(tr[i].getElementsByTagName("td")[0].firstChild.nodeValue);
+};
+if(ids.length>5){
+	for(var i=5;i<ids.length;i++){
+		window.location.href="/plate/delete/"+ids[i];
+	}
+}
+var tr = document.getElementById("plates").getElementsByTagName("tr");
+var ids = new Array();
+var names = new Array();
+for( var i=0; i<tr.length-2; i++){
+	if(tr[i].getElementsByTagName("td")[1]!=undefined){
+		ids.push(tr[i].getElementsByTagName("td")[0].firstChild.nodeValue);
+		names.push(tr[i].getElementsByTagName("td")[1].firstChild.nodeValue);
+	}
+	else{
+		ids = [];
+		names = [];
+	}
+};
+if(typeof(Storage)!=="undefined") {
+	//如果支持web储存
+	localStorage.plates_id = JSON.stringify(ids);
+	localStorage.plates_name = JSON.stringify(names);
+}
+var plate = decodeURI(getUrlParam('plate'));
+if(plate==1){
+	window.location = '/';
+}
+var path = '/static/plates/'+id+'/';
+var layers_count = tr[0].getElementsByTagName("td")[5].getElementsByClassName("add-on")[0].innerHTML.split("</span>")[1].split("<span")[0].replace(/(^\s*)|(\s*$)/g, "");
+$(".view").append('<div class="plate" data-plate="'+id+'" data-total="'+layers_count+'"><div class="details"><div id="slicer_pro" class="progress progress-striped"><div style="width: 0px;" class="progress-bar progress-bar-warning"></div></div><br><div id="slicer_alert" class="alert alert-danger">已开始切片，你可以开始打印了</div></div></div>');
+$("#preview_range").attr('max',layers_count);
+$('#preview').attr('data-path',path);
+imgLoad(path+'1.png',function() {
+	preview_update();
+})
+$('#star').click(function(){
+	$('#star').removeAttr("id");
+	window.location.href="/printer/start/"+id;
+})
+$('#step1').click(function(){
+	window.location.href="/static/?width=105.6&height=70.5&dst=/plate/add-support&exit=/plates";
+})
+$('#step2').click(function(){
+	alert('请先在step1中选择文件')
+	window.location.href="/static/?width=105.6&height=70.5&dst=/plate/add-support&exit=/plates";
+})
+$('#setup_3d').click(function(){
+	if(typeof(Storage)!=="undefined") {
+		//如果支持web储存
+		localStorage.setup_from = JSON.stringify(2);
+	}
+	window.location.href = "/z-calibration";
+});
+{% endblock %}
+

@@ -1,0 +1,302 @@
+{% extends "base2.html" %}
+{% block menu %}
+			<div id="running">
+				<div id="button_1">
+					<img class="img" style="height: 49px;" src="/static/img/2_03.png" />
+					<a class="step3_button_a ask" href="/printer/stop" title="stop" data-ask="stop-confirm" translate>停止打印</a>
+				</div>
+				<!--<translate class="hide" id="stop-confirm">你确定要停止打印吗？它会在当前图层完成后停止。如果你想中止当前图层，进入`Setup`页面，点击`Tools`选项卡并点击`Force Stop`按钮。</translate>-->
+				<translate class="hide" id="stop-confirm">你确定要停止打印吗？它会在当前图层完成后停止。</translate>
+				<div id="button_2">
+					<img class="img" style="height: 49px;" src="/static/img/2_03.png" />
+					<a class="step3_button_a " href="/printer/pause" translate>暂停打印</a>
+				</div>
+				{% if autoShutdown %}
+					<a class="step3_button_2 " href="/printer/auto-shutdown/disable" alt="Disable shutdown after job completion" translate>禁用自动关机<div></div></a>
+				{% else %}
+					<a class="step3_button_2 " href="/printer/auto-shutdown/enable" alt="Enable shutdown after job completion" translate>启用自动关机<div></div></a>
+				{% endif %}
+			</div>
+			<div id="idle">
+				<br>
+				{% if cast==false %}
+					<translate class="hide" id="display-confirm">你确定要开始显示吗？它会自动选择第二个显示。</translate>
+					<div id="button_1">
+					<img class="img" style="height: 49px;" src="/static/img/2_03.png" />
+						<a class="step3_button_a ask" href="/printer/cast" data-ask="display-confirm" translate>开始显示</a>
+					</div>
+				{% endif %}
+				<div id="button_2">
+					<img class="img" style="height: 49px;" src="/static/img/2_03.png" />
+					<a id="resume" class="step3_button_a " href="/printer/resume" onclick="return confirm('Are you sure you want to resume plate [[plate]] from layer [[last_layer]]?');" translate>继续打印</a>
+				</div>
+				{% if projectorPowerCycle==1 %}
+					<a class="ajax btn btn-warning" href="/projector/off" name="type" data-confirm="projectoroff-confirm" translate>关闭投影机</a>
+					&nbsp; &nbsp; &nbsp;
+					<translate class="hide" id="projectoroff-confirm">Are you sure you want to power off the projector?</translate>
+				{% endif %}
+
+				{% if arch=="arm" %}
+					<a class="ajax btn btn-danger" href="/printer/off" name="type" data-confirm="poweroff-confirm" translate>关机</a>
+					<translate class="hide" id="poweroff-confirm">Are you sure you want to power off the printer?</translate>
+					<!--<a class="ajax btn btn-danger" href="/printer/restart" title="stop" name="type" data-confirm="restart-confirm" translate>重新开始</a>
+					<translate class="hide" id="restart-confirm">Are you sure you want to restart the printer?</translate>-->
+				{% endif %}
+			</div>
+			<div id="pause">
+				<div id="button_1">
+					<img class="img" style="height: 49px;" src="/static/img/2_03.png" />
+					<a class="step3_button_a " href="/printer/stop"  >停止打印</a>
+				</div>
+				<!--<translate class="hide" id="stop-confirm2">你确定要停止打印吗？</translate>-->
+				<div id="button_2">
+					<img class="img" style="height: 49px;" src="/static/img/2_03.png" />
+					<a class="step3_button_a " href="/printer/unpause" translate>恢复打印</a>
+				</div>
+			</div>
+			<div id="camera">
+				<a class="btn btn-success" href="/camera/take" translate>Take Photo</a>
+			</div>
+			{{ buttonsView(buttons,"/") }}
+{% endblock%}
+{% block content %}
+<div class="view_block left_up"></div>
+	<div class="view_block right_up"></div>
+	<div class="view_block left_down"></div>
+	<div class="view_block right_down"></div>
+	<div class="view">
+		
+	</div>
+	<div id="menu_bottom">
+		<img src="/static/img/setup.png" id="setup_3d" />
+		<!--<div class="step2_button gray" id="enter_move">排布</div>-->
+	</div>
+<div class="starter-template" style="float: left;left:350px;">
+	{% if !mute %}
+	<!--<audio id="buzzer" src="/static/alert.ogg" type="audio/ogg"></audio>-->
+	<span id="buzzer"></span>
+	{% else %}
+	<span id="buzzer"></span>
+	{% endif %}
+	<div class="alert alert-danger hide" id="msg_box" translate>无法连接到打印机。请检查您的连接。</div>
+	<div class="Idle">
+		<br>
+		<!--<div class="text-info box" translate>The 3D printer is idle. You can use 'Plates' page to start printing.</div>-->
+		<br>
+	</div>
+			<div class="Printing">
+				<div id="image_wrapper" class="image_enlarge"></div>
+				<div id="layer_details">
+					<div class="key" translate>模型名称</div><div class="val last_path"></div><br>
+					<div class="key" translate>剩余层数</div><div class="val last_location"></div><br>
+					<div class="key" translate>剩余时间</div><div class="val last_remaining"></div><br>
+					<!--<div class="key debug" translate>Module</div><div class="val last_module debug"></div><br>-->
+					<!--<div class="key debug" translate>Action</div><div class="val last_action debug"></div><br>-->
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div id="photo_wrapper" class="image_enlarge"></div>
+			<div class="clear"></div>
+			<div class="Printing">
+				<div class="num"></div>
+				<div class="progress progress-striped">
+					<div style="width: 0%" class="progress-bar progress-bar-warning"></div>
+				</div>
+				<!--<div class="stat-bar progress">
+					<div class="part" id="MoveTo" style="background-color:rgba(174,77,86,255);" translate>To Layer</div>
+					<div class="part" id="GcodeBefore" style="background-color:rgba(176,116,132,255);" translate>Gcode Before</div>
+					<div class="part" id="WaitBefore" style="background-color:rgba(103,164,117,255);" translate>Wait Before</div>
+					<div class="part" id="DisplayLayer" style="background-color:rgba(48,120,93,255);" translate>Cure Layer</div>
+					<div class="part" id="WaitAfter" style="background-color:rgba(188,174,56,255);" translate>Wait After</div>
+					<div class="part" id="GcodeAfter" style="background-color:rgba(18,143,149,255);" translate>Gcode After</div>
+					<div class="part" id="MoveToWait" style="background-color:rgba(146,153,196,255);" translate>Lift</div>
+					<div class="part" id="WaitAfterLift" style="background-color:rgba(158,142,87,255);" translate>Lift Wait</div>
+				</div>-->
+			</div>
+
+	<div class="row">
+		<div class="col-md-12">	
+		</div>
+	</div>
+
+	<div style="display: none;">
+	<h1><span translate>Application Log</span> &nbsp; &nbsp; &nbsp; <a id="toggle_log" class="label label-default" translate>Toggle Log</a></h1>
+	<div id="console_wrapper">
+		<div id="console">
+			<table class="search_target table table-striped table-hover">
+				<tr>
+					<th translate>Level</th>
+					<th translate>Layer</th>
+					<th translate>Time</th>
+					<th translate>Module</th>
+					<th translate>Details</th>
+				</tr>
+			</table>
+		</div>
+	</div>
+	</div>
+</div>
+<!--<div class="col-md-6">
+			{% if os=="linux" %}
+				<table id="stat">
+					<tr>
+						<td width="60px" translate>CPU</td>
+						<td width="40px" id="proc">{{stat.Proc}}</td>
+						<td width="60px" translate>Proc</td>
+						<td width="40px" id="proc_numb">{{stat.ProcNumb}}</td>
+						<td width="60px" translate>Temp</td>
+						<td width="40px" id="temp">{{stat.Temp}}</td>
+					</tr>
+					<tr>
+						<td colspan=2 id="proc_chart" class="spark"><canvas></canvas></td>
+						<td colspan=2 id="proc_numb_chart" class="spark"><canvas></canvas></td>
+						<td colspan=2 id="temp_chart" class="spark"><canvas></canvas></td>
+					</tr>
+					<tr>
+						<td translate>Disk</td>
+						<td id="disk">{{stat.Disk}}</td>
+						<td translate>Memory</td>
+						<td id="mem">{{stat.Mem}}</td>
+						<td translate>Uptime</td>
+						<td id="uptime">{{stat.Up}}</td>
+					</tr>
+					<tr>
+						<td colspan=2 id="disk_chart" class="spark"><canvas></canvas></td>
+						<td colspan=2 id="mem_chart" class="spark"><canvas></canvas></td>
+						<td colspan=2 id="" class="spark"><canvas></canvas></td>
+					</tr>
+				</table>
+			{% endif %}
+</div>-->
+<!--打印空闲模态框-->
+<div class="modal fade" id="idle_print" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×
+				</button>
+				<!--<h4 class="modal-title" id="myModalLabel">-->
+					<!--模态框（Modal）标题-->
+				<!--</h4>-->
+			</div>
+			<div class="modal-body">
+				打印机空闲，可以开始新的打印
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-info"	data-dismiss="modal" onclick=" window.location.href='/static/?width=105.6&height=70.5&dst=/plate/add-support&exit=/plates' ">
+					ok
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--先停止打印模态框-->
+<div class="modal fade" id="stop_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×
+				</button>
+				<!--<h4 class="modal-title" id="myModalLabel">-->
+					<!--模态框（Modal）标题-->
+				<!--</h4>-->
+			</div>
+			<div class="modal-body">
+				请先停止打印再开始新的打印！
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-info"	data-dismiss="modal" >
+					ok
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--先选文件模态框-->
+<div class="modal fade" id="step1_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×
+				</button>
+				<!--<h4 class="modal-title" id="myModalLabel">-->
+					<!--模态框（Modal）标题-->
+				<!--</h4>-->
+			</div>
+			<div class="modal-body">
+				请先在step1中选择文件
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-info"	data-dismiss="modal" onclick=" window.location.href='/static/?width=105.6&height=70.5&dst=/plate/add-support&exit=/plates' ">
+					明白
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% endblock %}
+{% block script %}
+function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+    if (r != null) return unescape(r[2]); return null; //返回参数值
+}
+$(function(){
+	var path = decodeURI(getUrlParam('plate'));
+	if(path == 1){
+		window.location = encodeURI(encodeURI('/plates'+'?plate='+1));
+	}
+	$.ajax({
+		url:'status',
+		dataType: 'json',
+		type: 'GET',
+		timeout: 1200
+	}).done(function(data){
+		if (!data['Printing']){
+			$('#idle_print').modal();
+		}
+	});
+})
+$('#step1').click(function(){
+	$.ajax({
+		url:'status',
+		dataType: 'json',
+		type: 'GET',
+		timeout: 1200
+	}).done(function(data){
+		if (!data['Printing']){
+			window.location.href="/static/?width=105.6&height=70.5&dst=/plate/add-support&exit=/plates";
+		}
+		else{
+			$('#stop_modal').modal();
+		}
+	});
+	<!--window.location.href="/static/?width=1.920000&height=1.080000&dst=/plate/add-support&exit=/plates";-->
+	
+})
+$('#step2').click(function(){
+	$.ajax({
+		url:'status',
+		dataType: 'json',
+		type: 'GET',
+		timeout: 1200
+	}).done(function(data){
+		if (!data['Printing']){
+			$('#step1_modal').modal();
+		}
+		else{
+			$('#stop_modal').modal();
+		}
+	});
+})
+$('#setup_3d').click(function(){
+	if(typeof(Storage)!=="undefined") {
+		//如果支持web储存
+		localStorage.setup_from = JSON.stringify(3);
+	}
+	window.location.href = "/z-calibration";
+});
+{% endblock %}

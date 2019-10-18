@@ -1,0 +1,59 @@
+{% extends "../base.html" %}
+{% block content %}
+<div class="starter-template">
+	<div class="alert alert-success" role="alert">
+		<ul>
+			<li translate>Dimming and Mask settings will take effect on the created layers.</li>
+			<li translate>Please upload an image with the same width and height as your projector's native resolution.</li>
+			<li translate>Even-though it can process multi color images, to make the dimming feature work correctly, try to use images containing grayscale colors.</li>
+			<li translate>This process could take up to a minute to complete, depending on the depth.</li>
+		</ul>
+	</div>
+	<legend translate>Plate Generator</legend>
+	<form action="" method="post" class="edit-page" enctype="multipart/form-data">
+		<div class="row">
+			<div class="col-md-4">
+				<label for="Path" translate>Plate Name</label>
+				<input value="{{plate.Path}}" name="Path" id="Path" class="form-control" required>
+			</div>
+			<div class="col-md-4">
+				{% if paint %}
+				<img src="/static/plates/paint.png" width="100%">
+				{% else %}
+				<label for="ZipFile" translate>PNG/JPEG File</label>
+				<input name="ZipFile" id="ZipFile" type="file" accept=".png,.jpg">
+				{% endif %}
+			</div>
+			<div class="col-md-4">
+				<label for="ProfileID" translate>Profile</label>
+				<select name="ProfileID" id="ProfileID" class="form-control">
+					{% for profile in profiles %}
+						<option value="{{profile.ProfileID}}" {% if profile.ProfileID == plate.ProfileID %}selected{% endif %}>{{profile.Title}}</option>
+					{% endfor %}
+				</select>
+				<br>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<label for="Depth"><translate>Plate Depth</translate> <span class="label label-default" translate>Millimeter</span></label>
+				<input value="3" name="Depth" id="Depth" value="{{generator.Depth}}" class="form-control" required>
+				<br>
+			</div>
+			<div class="col-md-4">
+				<label for="StopLayers" translate>Stop Layers - Comma Seperated</label>
+				<input value="{{plate.StopLayers}}" name="StopLayers" id="StopLayers" class="form-control" pattern="[\d,]*">
+			</div>
+			<div class="col-md-4">
+				<label for="LowQualityLayerNumber" translate>Number of Low Quality Layers</label>
+				<input value="{{plate.LowQualityLayerNumber}}{% if not plate.PlateID %}0{% endif %}" name="LowQualityLayerNumber" id="LowQualityLayerNumber" type="number" class="form-control" required>
+				<br>
+			</div>
+		</div>
+		<br>
+		<button type="submit" class="btn btn-success" translate>Generate</button>
+	</form>
+	<br>
+	<br>
+</div>
+{% endblock %}

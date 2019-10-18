@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+	<meta charset="utf-8">
+	<!--<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="">
+	<meta name="author" content="">-->
+	<link rel="icon" href="favicon.ico">
+
+	<!-- Custom styles for this template -->
+	<link href='css/step.css' rel="stylesheet">
+	<link href='css/jquery-ui.css' rel="stylesheet">
+	<link href="css/boot3mode.css" rel="stylesheet"/>
+	<link href="css/mynumkb.css" rel="stylesheet" /> 
+	<link href="js/loading/src/loading.css" rel="stylesheet">
+	<link href="css/context.standalone.css" rel="stylesheet">
+	<style>*{padding:0;margin:0;}</style>
+	<title>3D打印</title>
+</head>
+<body onselectstart="return false">
+<!--<body onmousemove=/HideMenu()/ oncontextmenu="return false" ondragstart="return false" onselectstart ="return false" onselect="document.selection.empty()" oncopy="document.selection.empty()" onbeforecopy="return false" onmouseup="document.selection.empty()">-->
+	<div class="view_angle">
+		<div id="view_state"></div>
+		<img src="img/view_1.png" id="view_conter" class="view_orientation" />
+		<img src="img/view_4.png" id="view_up" class="view_orientation" />
+		<img src="img/view_7.png" id="view_down" class="view_orientation" />
+		<img src="img/view_6.png" id="view_left" class="view_orientation" />
+		<img src="img/view_3.png" id="view_right" class="view_orientation" />
+	</div>
+	<div class='steps'>
+		<div class = "step active" id="step1"><span class="span_step">STEP</span><br/><span class="span_num">1</span></div>
+		<div class = "step" id="step2"><span class="span_step">STEP</span><br/><span class="span_num">2</span></div>
+		<div class = "step_3" id="step3"><span class="span_step">STEP</span><br/><span class="span_num">3</span></div>
+	</div>
+	<div class="menu" id="menu_step1">
+		<!--<div class="application_text">应用材料</div>-->
+		<div class="application">
+			<div class="select_material">
+				<div class="application_title">选择应用材料</div>
+				<div class="material">
+					<label id="material_1">
+			    	<input type="radio"  name="radio" value="1" id="radio_1" >
+			    	<label for="radio_1" class="radio"></label>
+			    	<span>材料1 PollyX</span>
+			    	</label>
+		  		</div>
+		  		<div class="material">
+		  			<label id="material_2">
+		    		<input type="radio"  name="radio" value="2" id="radio_2">
+			  		<label for="radio_2" class="radio"></label>
+		    		<span>材料2 ZR550</span>
+		    		</label>
+		  		</div>
+		  		<div class="material">
+		  			<label id="material_3">
+		    		<input type="radio"  name="radio" value="3" id="radio_3">
+			  		<label for="radio_3" class="radio"></label>
+		    		<span>材料3 SuperRes</span>
+		    		</label>
+		  		</div>
+		  		<div class="material">
+		  			<label id="material_4">
+		    		<input type="radio"  name="radio" value="4" id="radio_4">
+			  		<label for="radio_4" class="radio"></label>
+			  		<span>自定义材料</span>
+			  		<!--<a class="a-profile" href="/profile/edit/3" title="Edit" translate>编辑</a>-->
+			  		</label>
+			  		<div class="material_setup" id="material_edit">编辑</div>
+		  		</div>
+			</div>
+			<div id="material_img">
+				<div class="application_title" id="material_img_title">树脂材料</div>
+				<img src="img/m1.jpg">
+			</div>
+		</div>
+		<div class="import">
+			<div class="open_file">
+				<input type="file" id="support_file" accept=".stl" onclick="$('#support_file').val('');" >
+				<img src="img/file.png"/>
+				<span>选择文件</span>
+				<div class="file_name">
+					文件路径:
+					<input type="text" id="input_text" disabled /> 
+				</div>
+			</div>
+		</div>
+		<div class="recent_files">
+			<div class="recent_title">最近文件</div>
+		</div>
+		<div class="rotates" id="rotates">
+<!--			<div class="application_title" id = "rotate_text">模型角度调整</div>-->
+			<div class="rotate" id="rotate_x">
+				<label class="angle_text" for="amountX">X:</label>
+				<input id="amountX" class="slider_input">
+				<div id="sliderX" class="slider"></div>
+			</div>
+			<div class="rotate" id="rotate_y">
+				<label class="angle_text" for="amounty">Y:</label>
+				<input id="amountY" class="slider_input">
+				<div id="sliderY" class="slider"></div>
+			</div>
+			<div class="rotate" id="rotate_z">
+				<label class="angle_text" for="amountz">Z:</label>
+				<input id="amountZ" class="slider_input">
+				<div id="sliderZ" class="slider"></div>
+			</div>
+			<!--<div class="rotate" id="volume">-->
+				<!--<label class="angle_text" >V:</label>-->
+				<!--<input id="amountV" class="slider_input">-->
+				<!--<label class="volume_unit">%</label>-->
+			<!--</div>-->
+			<div id="reset">重置</div>
+		</div>
+	</div>
+	
+
+	<div class="menu" id="menu_step2"style="display: none;">
+		<div id="support">
+			<!--<img class="img" src="img/2_01.png" />-->
+			<!--<div id="new_support" class="step2_button " >-->
+				<!--添加支撑样式-->
+				<!--<div class="blue_block"></div>-->
+			<!--</div>-->
+			<div id="supports">
+				<div id = "supports_text">支撑样式选择</div>
+				<div id="support_types"></div>
+			</div>
+			<div class="densitys">
+				<div id = "density_text">支撑密度选择</div>
+				<div id="big" class="step2_button gray density" >密度大</div>
+				<div id="mid" class="step2_button gray density selected_button" >密度中</div>
+				<div id="lit" class="step2_button gray density" >密度小</div>
+			</div>
+			<div id="support_button">
+				<div id="button_text">支撑底板操作</div>
+				<div  id="brace" class="density_button step2_button gray " >一键添加</div>
+				<div id="manually_adding_support" class="density_button step2_button gray">单个添加支撑</div>
+				<div  id="unify_base" class="density_button step2_button gray">添加底板</div>
+				<div id="del_support" class=" density_button step2_button gray " >清除支撑</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="speed"></div>
+	<div id="progressbar"></div>
+	<div id="occlusion"></div>
+	<div id="view_3d"></div>
+	
+	<div id="menu_bottom">
+		<img src="img/setup.png" id="setup_3d" />
+		<div class="step2_button gray" id="enter_move">排布</div>
+		<div class="step2_button gray" id="automatic_alignment">自动排布</div>
+	</div>
+	<iframe src="/profile/edit/4" id="profile_edit" frameborder="no" border="0" scrolling="no"></iframe>
+<!--返回第一页模态框-->
+	<div class="modal fade" id="return_step1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">×
+					</button>
+					<!--<h4 class="modal-title" id="myModalLabel">-->
+						<!--模态框（Modal）标题-->
+					<!--</h4>-->
+				</div>
+				<div class="modal-body">
+					确定返回第一步重新开始吗？
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info"	data-dismiss="modal">
+						关闭
+					</button>
+					<button type="button" onclick="window.location.href='/static/?width=105.6&height=70.5&dst=/plate/add-support&exit=/plates';" class="btn btn-warning">
+						确定
+					</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	<!--选择文件模态框-->
+	<div class="modal fade" id="select_file" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">×
+					</button>
+					<!--<h4 class="modal-title" id="myModalLabel">-->
+						<!--模态框（Modal）标题-->
+					<!--</h4>-->
+				</div>
+				<div class="modal-body">
+					请先选择文件
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info"	data-dismiss="modal">
+						好的
+					</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+
+	<div id="control" class="support" style="display: none;">
+		<a href="#" class="mode selected" data-mode="layout">Layout View</a>
+		<a href="#" class="mode" data-mode="support">Support View</a>
+		<a href="#" class="mode" data-mode="plate">Plate View</a>
+		<a href="#" id="export">Download STL</a>
+		<a href="#" id="save" >Add as Plate</a>
+		<a href="#" id="exit">Exit</a>
+	</div>
+	<!--<input id="slider" type="range" min="0" max="100" step="0.1" value="100" orient="vertical" style="display: none;">-->
+	<div id="items" class="support" style="display: none;"></div>
+
+	<div id="tools_box" class="support" style="display: none;">
+		<div id="layout_box">
+			<input type="file" id="support_file" accept=".stl">
+			<div class="clear"></div>
+			<br>
+			<input placeholder="Height of Pieces" id="start_height">
+			<input type="button" value="Move" id="model_elevate" class="btn-success">
+			<br>
+			<br>
+			<input type="button" value="Object Reset" id="object-reset" class="btn-success">
+			<div class="clear"></div>
+			<br>
+		</div>
+		<div id="support_box">
+			<div id="support_types">
+			</div>
+			<br>
+			<input type="button" value="Add Support Type" id="new_support" class="btn-success">
+			<br>
+			<br>
+			<input placeholder="Max Distance" id="max_dist">
+			<input placeholder="Diameter" id="weaver_dia">
+			<input type="button" value="Weave Supports" class="btn-success" id="weaver">
+			<div class="clear"></div>
+			<br>
+
+			<input type="button" value="Unify Supports" id="unify_base" class="btn-success">
+			<div class="clear"></div>
+		</div>
+		<div id="plate_box">
+			<input type="file" id="plate_file" accept=".stl" multiple="multiple">
+			<div class="clear"></div>
+			<br>
+			<input type="button" value="Rotate" id="rotate_btn" class="btn-success">
+			<div class="clear"></div>
+			<br>
+			<input placeholder="Objects Margin mm" id="gap">
+			<input type="button" value="Arrange" id="pack_btn" class="btn-success">
+			<br>
+		</div>
+		<br>
+		<table id="perspective_buttons">
+			<tr>
+				<td></td>
+				<td><input id="top" type="button" value="Top" data-x="0" data-y="0" data-z="220" data-reset="true" class="cam-change btn-info"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><input id="left" type="button" value="Left" data-x="200" data-y="0" data-z="30" data-reset="true" class="cam-change btn-info"></td>
+				<td><input id="front" type="button" value="Front" data-x="0" data-y="200" data-z="30" data-reset="true" class="cam-change btn-info"></td>
+				<td><input id="behind" type="button" value="Behind" data-x="0" data-y="-200" data-z="30" data-reset="true" class="cam-change btn-info"></td>
+				<td><input id="right" type="button" value="Right" data-x="-200" data-y="0" data-z="30" data-reset="true" class="cam-change btn-info"></td>
+			</tr>
+			<tr>
+				<td><input id="i_reset" type="button" value="Reset" class="cam-reset btn-success"></td>
+				<td><input id="bottom" type="button" value="Bottom" data-x="0" data-y="0" data-z="-220" data-reset="true" class="cam-change btn-info" id="bottom"></td>
+				<td></td>
+			</tr>
+		</table>
+		<div class="clear"></div>
+		<br>
+
+		<div id="resize">
+			<table>
+				<tr>
+					<td>Width</td>
+					<td>Height</td>
+					<td>Length</td>
+				</tr>
+				<tr>
+					<td><input id="resize_width" type="number" step="any"></td>
+					<td><input id="resize_height" type="number" step="any"></td>
+					<td><input id="resize_length" type="number" step="any"></td>
+				</tr>
+			</table>
+			<label>
+				<input type="checkbox" id="resize_ratio">
+				&nbsp; Keep Ratio
+			</label>
+			<div class="clear"></div>
+			<input type="button" value="Resize" id="resize_button" class="btn-warning">
+		</div>
+		<div class="clear"></div>
+		<br>
+		<input type="button" value="Toggle Grid" class="btn-success" id="toggle_grid">
+		<div class="clear"></div>
+		<br>
+		<input type="button" value="Help" class="btn-success guide">
+		<div class="clear"></div>
+		<br>
+		<input type="button" value="Reset Default" id="reset" class="btn-danger">
+
+	</div>
+	<div id="support_add_box" style="display: none;">
+		<div id="edit_support">
+			<span>编辑样式</span>
+			<div id="support_close">X</div>
+		</div>
+		<form id="support_add">
+			<div class="position_name">名称:</div>
+			<div class="form-group">
+				<input name="name" placeholder="Name" class="form-control" id="form_name" required></td>
+			</div>
+			<br />
+			<div class="position_type">支撑类型:</div>
+			<div class="form-group">
+				<select id="form_type" name="type" class="form-control toggle_master">
+					<option value="0">模型到平台</option>
+					<option value="1">点到点</option>
+				</select>
+			</div>
+			<div class="position_head">头部:</div>
+			<div class="form-group type_0">
+				<label id="label_head_dia" class="label">半径:</label>
+				<input id="form_head_dia" class="form-control" name="head_dia" placeholder="Head Radius" type="number" step="0.1">
+			</div>
+			<div class="form-group type_0">
+				<label id="label_head_len" class="label">长度:</label>
+				<input id="form_head_len" class="form-control" name="head_len" placeholder="Head Length" type="number" step="0.1">
+			</div>
+			<div class="form-group type_0">
+				<label id="label_head_type" class="label">类型:</label>
+				<select id="form_head_type" class="form-control" name="head_type">
+					<option value="0">锥形</option>
+					<option value="1">球形</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label id="label_penetration" class="label">浸入:</label>
+				<input id="form_penetration" class="form-control" name="penetration" placeholder="Peneteration" type="number" step="0.1">
+			</div>
+			<div class="position_body">中部:</div>
+			<div class="form-group">
+				<label id="label_body_dia" class="label">半径:</label>
+				<input id="form_body_dia" class="form-control" name="body_dia" placeholder="Body Radius" required type="number" step="0.1">
+			</div>
+			<div class="position_base">基底:</div>
+			<div class="form-group type_0">
+				<label id="label_base_dia" class="label">半径:</label>
+				<input id="form_base_dia" class="form-control" name="base_dia" placeholder="Base Radius" type="number" step="0.1">
+			</div>
+			<div class="form-group type_0">
+				<label id="label_base_len" class="label">深度:</label>
+				<input id="form_base_len" class="form-control" name="base_len" placeholder="Base Depth" type="number" step="0.1">
+			</div>
+			<div class="form-group only_new">
+				<!--<div id="div_save">保存</div>-->
+				<input  id="form_save" type="submit" class="btn-warning"  value="保存">
+			</div>
+		</form>
+		<canvas id="support_preview" width="500px" height="40"></canvas>
+	</div>
+	<div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">3D Support Generator User Guide</h4>
+	      </div>
+	      <div class="modal-body">
+	      		<h4>Open a new Model</h4>
+	      		<ul>
+	      			<li>Supports both ASCII and Binary STL files.</li>
+	      			<li>STL files does not transmitted to the server and full processed on your browser.</li>
+	      			<li>Use browse button to load a model or drag drop it to your browser display.</li>
+	      		</ul>
+	      		<br>
+	      		<h4>Layout View</h4>
+	      		On this view you can rotate the model or elevate it.
+				<br>
+				<br>
+				<dl class="dl-horizontal small">
+					<dt>Rotate Model</dt>
+					<dd>Press and hold left click on the model and move the mouse.</dd>
+					<dt>Rotate Camera</dt>
+					<dd>Press and hold left click on the empty area of the viewport and move the mouse.</dd>
+					<dt>Move Camera</dt>
+					<dd>Press and hold right click and move the mouse.</dd>
+					<dt>Zoom In/Out</dt>
+					<dd>Use mouse wheel.</dd>
+					<dt>Elevate Model</dt>
+					<dd>Enter number on the left input and press move button.</dd>
+				</dl>
+				<br>
+				<h4>Support View</h4>
+				You can add new supports to the model and define support types.
+				<br>
+				<br>
+				<dl class="dl-horizontal small">
+					<dt>Add Support Types</dt>
+					<dd>On the left box you can define new support types.</dd>
+					<dt>Preview Support</dt>
+					<dd>For the model to floor support type, if any support has been selected by mouse, any changes on the support add form will effect the selected support details in realtime.</dd>
+					<dt>Add Support</dt>
+					<dd>Click on the model to add support, for some support types you need to click on two places.</dd>
+					<dt>Remove Support</dt>
+					<dd>
+						<ul>
+							<li>Click on support name on right of screen.</li>
+							<li>Click on support and press delete button.</li>
+							<li>Pressing delete button alone will remove supports in reverse order, one by one.</li>
+						</ul>
+					</dd>
+					<dt>Cancel Two Stage Supports</dt>
+					<dd>Press ESC key to cancel two stage supports such as bridges.</dd>
+				</dl>
+				<h4>Plate View</h4>
+				Arrange models on a plate.
+				<br>
+				<br>
+				<dl class="dl-horizontal small">
+					<dt>Clone Model</dt>
+					<dd>Clicking C on front of model will duplicate the model.</dd>
+					<dt>Rotate Model</dt>
+					<dd>After selecting model, keep CTRL button down mouse movement will cause 2D rotation.</dd>
+					<dt>Add Model w. Support</dt>
+					<dd>If your models already have support, you can add them directly in this mode.</dd>
+				</dl>
+				<h4>Possible Workflow</h4>
+				<br>
+				<ol>
+					<li>Layout View: Load model</li>
+					<li>Layout View: Rotate model</li>
+					<li>Support View: Add supports</li>
+					<li>Plate View: Move model around</li>
+					<li>Go to step one and repeat the process</li>
+					<li>If you have models with supports, you can directly include them in Plate View.</li>
+				</ol>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<script src='boot3/js/jquery.min.js'></script>
+	<script src="js/loading/src/loading.js"></script>
+	<script src='boot3/js/bootstrap.min.js'></script>
+	<script src="js/context.js"></script>
+	<script src='js/three.min.js'></script>
+	<script src='js/TrackballControls.js'></script>
+	<script src='js/three.dragcontrols.js'></script>
+	<script src='js/STLBinaryExporter.js'></script>
+	<script src='js/FileSaver.min.js'></script>
+	<script src="js/jquery.cookie.js"></script>
+	<script src='js/c.js'></script>
+	<script src='boot3/js/jquery-ui.min.js'></script>
+	<script src="js/mynumkb.js"></script>
+	<script>
+		$(function () {
+			if(typeof(Storage)!=="undefined") {//如果支持web储存
+				if(localStorage.getItem('material_type') != null){
+					$("#radio_"+localStorage.getItem('material_type')).attr("checked","checked");
+					$("#material_"+localStorage.getItem('material_type')).click();
+				}
+				else{
+					$("#radio_1").attr("checked","checked");
+					$("#material_1").click();
+				}
+				if(typeof(localStorage.plates_id)!="undefined"){
+					if(JSON.parse(localStorage.plates_id) != null){
+						var ids = JSON.parse(localStorage.plates_id)
+						var names = JSON.parse(localStorage.plates_name)
+						if(ids==null){
+							$(".recent_files").append('<div class="recent_div">无</div>');
+						}else{
+							for(var i=0;i<ids.length;i++){
+								var name = names[i];
+		//							console.log(name,name.length,name.substr(0,8))
+								if(name.length>10){
+									name = name.substr(0,8)+'......';
+								}
+								$(".recent_files").append('<div class="recent_div"><span>'+(i+1)+'.</span><a href="/static/?src=/static/plates/'+ids[i]+'/plate.stl&amp;dst=/plate/add-support&amp;width=105.6&amp;height=70.5"  class="recent_a">'+name+'</a></div>');
+							}
+							$.ajax({
+								type:"POST",
+								url:"http://localhost:3000/leiji",
+								async:true,
+								data:{number:ids[0]},
+								timeout:5000,
+								dataType:"json",
+								success:function(data){
+									var data=eval(data);//json解码
+									console.log(data)
+								},
+								error:function(error){
+									console.log("error");
+								}
+							})
+
+						}
+
+					}
+				}
+
+			}
+
+			var fileUploader = document.getElementById('support_file'); 
+			var pathDisplayer = document.getElementById('input_text'); 
+			if(fileUploader.addEventListener){ 
+				fileUploader.addEventListener('change', fileUploaderChangeHandler, false); 
+			}
+			else if(fileUploader.attachEvent){
+				fileUploader.attachEvent('onclick', fileUploaderClickHandler); 
+			}
+			else{
+				fileUploader.onchange = fileUploaderChangeHandler; 
+			} 
+			function fileUploaderChangeHandler(){ 
+				pathDisplayer.value = fileUploader.value; 
+			} 
+			function fileUploaderClickHandler(){ 
+				setTimeout(
+					function(){
+						fileUploaderChangeHandler();
+					}
+				, 0);
+			}
+			
+
+			$('img').on('mousedown',function (e) {
+			    e.preventDefault()
+			})
+			$("#sliderX").slider({
+				range: "max",
+				min: -180,
+				max: 180,
+				value: 0,
+			});
+			$("#sliderY").slider({
+				range: "max",
+				min: -180,
+				max: 180,
+				value: 0,
+			});
+			$("#sliderZ").slider({
+				range: "max",
+				min: -180,
+				max: 180,
+				value: 0,
+			});
+		});
+		$("#amountX").mynumkb();
+		$("#amountY").mynumkb();
+		$("#amountZ").mynumkb();
+		$('#material_1').click(function(){
+			$('#material_img img').attr('src','img/m1.jpg');
+		});
+		$('#material_2').click(function(){
+			$('#material_img img').attr('src','img/m2.jpg');
+		});
+		$('#material_3').click(function(){
+			$('#material_img img').attr('src','img/m3.jpg');
+		});
+		$('#material_4').click(function(){
+			$('#material_img img').attr('src','img/m4.png');
+		});
+		
+		$('#view_state').click(function(){
+			if (F!="layout"){
+				if($('.view_orientation').css('display')=='none'){
+					$('.view_orientation').css('display','block');
+				}
+				else{
+					$('.view_orientation').css('display','none');
+				}
+			}
+
+		});
+
+		$('#view_up').click(function(){
+			$('.view_orientation').css('display','none');
+			$('#view_state').css('background-image','url(../static/img/view_4.png)');
+			if (F!="layout" && F!="can_not_add_support"){
+				F="cant_move_model";
+			}
+			$('#top').click();
+		});
+		$('#view_down').click(function(){
+			$('.view_orientation').css('display','none');
+			$('#view_state').css('background-image',"url(../static/img/view_7.png)");
+			if (F!="layout" && F!="can_not_add_support"){
+				F="cant_move_model";
+			}
+			$('#bottom').click();
+		});
+		$('#view_left').click(function(){
+			$('.view_orientation').css('display','none');
+			$('#view_state').css('background-image','url(../static/img/view_6.png)');
+			$('#left').click();
+			if (F!="layout" && F!="can_not_add_support"){
+				F="cant_move_model";
+			}
+		});
+		$('#view_right').click(function(){
+			$('.view_orientation').css('display','none');
+			$('#view_state').css('background-image','url(../static/img/view_3.png)');
+			$('#right').click();
+			if (F!="layout" && F!="can_not_add_support"){
+				F="cant_move_model";
+			}//不允许相机移动
+		});
+		$('#view_conter').click(function(){
+			$('.view_orientation').css('display','none');
+			$('#view_state').css('background-image','url(../static/img/view_1.png)');
+			F="Z_rot";//允许相机围绕z轴旋转
+			Z_rot_end_x=0;//相机围绕z轴旋转归0
+			$('#i_reset').click();
+		});
+		
+		$('#div_add').click(function(){
+			$('#form_add').submit(function(){});
+//			alert('add')
+		});
+		$('#div_save').click(function(){
+			$('#form_save').submit();
+//			alert('save')
+		});
+		$('#div_remove').click(function(){
+			$('#form_remove').submit();
+//			alert('remove')
+		});
+		$('#setup_3d').click(function(){
+			if(typeof(Storage)!=="undefined") {
+				//如果支持web储存
+				localStorage.setup_from = JSON.stringify(1);
+			}
+			window.location.href = "/z-calibration";
+		});
+		$("input[type='radio']").change(function(){
+			if(typeof(Storage)!=="undefined") {//如果支持web储存
+				//材料选择缓存
+				var obj = document.getElementsByTagName("input");
+			    for(var i=0; i<obj.length; i ++){
+			        if(obj[i].checked){
+						value = obj[i].value;
+			        }
+			    }
+				localStorage.setItem("material_type", value);
+			}
+		})
+		$('#material_edit').click(function(){
+//			$('#profile_edit').attr('src','/profile/edit/3')
+			$('#profile_edit').fadeIn();
+			document.getElementById('profile_edit').contentWindow.document.getElementById('submit_profile').onclick=function(){
+				$('#profile_edit').fadeOut();
+			};
+			document.getElementById('profile_edit').contentWindow.document.getElementById('profile_close').onclick=function(){
+				$('#profile_edit').fadeOut();
+			};
+		});
+	</script>
+</body>
+</html>
